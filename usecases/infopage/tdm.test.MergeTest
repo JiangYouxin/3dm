@@ -1,0 +1,20 @@
+# $Id: tdm.test.MergeTest,v 1.1 2006-02-02 17:42:58 ctl Exp $
+# =1=
+# Merging the changes from the profile to the home page
+#
+# results produced by corresponding CVS tag are labeled *-0proto_1_9_1
+base=personalia.xml
+a=personalia2.xml
+b=homepage.html
+facit=homepage2.html homepage2-0proto_1_9_1.html
+expect=homepage2-0proto_1_9_1.html
+
+# =2=
+# Merging chages from homepage into infopage
+#
+1.base=homepage.html
+1.a=homepage3.html
+1.b=maija-i.html
+1.facit=maija-i2.html maija-i2-0proto_1_9_1.html
+1.expect=maija-i2-0proto_1_9_1.html
+

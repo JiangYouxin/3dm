@@ -1,0 +1,3 @@
+The node $b$ is moved and deleted. The current implementation deletes the node
+and ignores the move. 
+

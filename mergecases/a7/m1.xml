@@ -1,0 +1,10 @@
+<!-- $Id: m1.xml,v 1.1 2006-02-02 15:37:53 ctl Exp $ -->
+<!-- Alternative 2: match so that b is updated to a, in which case
+   we get a, c, a(former b) -->
+<R>
+	<a/>
+	<c/>
+	<a/>
+</R>
+
+

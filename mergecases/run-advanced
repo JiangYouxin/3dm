@@ -1,0 +1,64 @@
+#!/bin/sh
+echo
+echo CASE A1
+./run-onecase a1
+echo
+echo CASE A2
+./run-onecase a2
+echo
+echo CASE A3
+echo "FAILS: Src-of-copy (s1) is locked, causing a sequence conflict" 
+./run-onecase a3
+echo
+echo CASE A4
+./run-onecase a4
+echo
+echo CASE A5
+./run-onecase a5
+echo
+echo CASE A6
+./run-onecase a6
+echo
+echo CASE A7
+echo "1 Conflict: Node b deleted and moved"
+./run-onecase a7
+grep -v '<' conflict.log
+echo
+echo CASE A8
+echo "FAILS: Not enough context + copy and far-moved c get sequenced in wrong "
+echo "order. Note, however that c is correctly moved out of both copies!"
+./run-onecase a8
+echo
+echo CASE A9
+./run-onecase a9
+echo
+echo CASE A10
+echo "FAILED: Jyrki's case (output OK, but wrong reasons. Read more in b.xml)"
+echo "Also note that we need to have copyhtreshold > 0"
+DIR=a10
+3dm -c 128 --merge $DIR/b.xml $DIR/1.xml $DIR/2.xml r.xml
+if 3dm --diff r.xml $DIR/m.xml | grep -q '<diff />'; then
+  echo Ok
+else
+  echo ---FAILED--- Case was $DI
+fi
+echo
+echo CASE A11
+./run-onecase a11
+echo
+echo CASE A12
+./run-onecase a12
+echo
+echo CASE A13
+./run-onecase a13
+echo
+echo CASE A14
+./run-onecase a14
+echo
+echo CASE A15
+./run-onecase a15
+echo
+echo CASE A16
+./run-onecase a16
+
+

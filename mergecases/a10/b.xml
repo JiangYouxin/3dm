@@ -1,0 +1,56 @@
+<!-- $Id: b.xml,v 1.2 2001-06-25 10:47:03 ctl Exp $ -->
+<!-- Jyrki's case. Yields the correct results but for the wrong
+     reasons. The actual operation is that the entire <l> trees were
+     swapped in one branch, and b was updated to a in the other 
+     3DM, however, sees this as far moves of b and a (with accompanying
+     deletes of the original nodes) + update a->b, which yields the same
+     results. 
+     NOTE: must be run with copythreshold > 0, as otherwise we'll get
+     that b has been copied instead of updated in one matching	
+Merge dump:
+	
+#########################################MERGED LIST
+<l {},l {}>
+<l {},l {}>
+#########################################Merge A list
+0: .*. __START__ [ b {}]
+1: .*. __END__ []
+Merge B list
+0: ... __START__ []
+1: ... b {} []
+2: ... __END__ []
+#########################################MERGED LIST
+<b {},b {}>
+#########################################Merge A list
+0: ... __START__ []
+1: ... __END__ []
+Merge B list
+0: ... __START__ []
+1: ... __END__ []
+#########################################MERGED LIST
+#########################################Merge A list
+0: .*. __START__ [ a {}]
+1: .*. __END__ []
+Merge B list
+0: ... __START__ []
+1: ... b {} []
+2: ... __END__ []
+#########################################MERGED LIST
+<a {},b {}>
+#########################################Merge A list
+0: ... __START__ []
+1: ... __END__ []
+Merge B list
+0: ... __START__ []
+1: ... __END__ []
+#########################################MERGED LIST
+-->
+
+<R>
+	<l>
+		<a/>
+	</l>
+	<l>
+		<b/>
+	</l>
+</R>

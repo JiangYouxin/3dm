@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: build.xml,v 1.11 2006-02-07 11:01:38 ctl Exp $ -->
+<project name="3dm" default="3dm" basedir=".">
+
+  <description>3DM build file</description>
+
+
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="classes"/>
+  <property name="tmpdir" location="tmp"/>
+  <property name="build-jar" location="build"/>
+  <property name="javalib" location="contrib/jar"/>
+
+  <!-- Library path -->
+  <path id="libpath">
+    <fileset dir="${javalib}">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <target name="init">
+    <!-- Ensure contrib up-to-date -->
+    <uptodate srcfile="contrib/contrib.xml" 
+              targetfile="contrib/.binstamp"
+              property="contrib.uptodate" />
+    <fail unless="contrib.uptodate">
+Contrib is not up-to-date. Run 
+ant contrib-get 
+to automatically download latest contrib, or fetch manually and run 
+ant contrib-ok
+    </fail>
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+    <mkdir dir="${tmpdir}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <javac srcdir="${src}" destdir="${build}"
+     includes="tdm/**" excludes="tdm/guitool/**" >
+    <classpath>
+      <path refid="libpath" />
+    </classpath>
+    </javac> 
+  </target>
+
+  <target name="compile-lib" depends="init"
+        description="compile the lib source " >
+    <javac srcdir="${src}" destdir="${build}"
+     includes="tdm/lib/**" >
+    <classpath>
+      <path refid="libpath" />
+    </classpath>
+    </javac> 
+  </target>
+
+  <target name="compile-tool" depends="init"
+        description="compile the tool source " >
+    <javac srcdir="${src}" destdir="${build}"
+	    includes="tdm/tool/**">
+    <classpath>
+      <path refid="libpath" />
+      <pathelement path="${build}" /> 
+    </classpath>
+    </javac> 
+  </target>
+
+  <target name="3dm" depends="compile-lib,compile-tool"
+        description="generate 3dm" >
+  </target>
+
+  <target name="3dm.jar" depends="3dm"
+        description="generate 3dm.jar" >
+    <jar jarfile="${build-jar}/3dm.jar" basedir="${build}">
+      <include name="tdm/**" />
+      <exclude name="tdm/test/**" />
+    </jar>
+    <jar jarfile="${build-jar}/3dm-lib.jar" basedir="${build}">
+      <include name="tdm/lib/**" />
+    </jar>
+  </target>
+
+  <target name="diff" depends="3dm">
+    <java classname="tdm.tool.TreeDiffMerge" fork="yes">
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build}" /> 
+      </classpath>
+      <arg value="--diff"/>
+      <arg file="${base}"/>
+      <arg file="${branch}"/>
+      <arg file="${diff}"/>
+    </java>
+  </target>
+
+  <target name="patch" depends="3dm">
+    <java classname="tdm.tool.TreeDiffMerge" fork="yes">
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build}" /> 
+      </classpath>
+      <arg value="--patch"/>
+      <arg file="${base}"/>
+      <arg file="${patch}"/> 
+      <arg file="${patched}"/>
+    </java>
+  </target>
+
+  <target name="merge" depends="3dm">
+    <java classname="tdm.tool.TreeDiffMerge" fork="yes">
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build}" /> 
+      </classpath>
+      <arg value="--merge"/>
+      <arg file="${base}"/>
+      <arg file="${branch1}"/>
+      <arg file="${branch2}"/>
+      <arg file="${merge}"/>
+    </java>
+  </target>
+
+  <target name="quick-test" depends="3dm">
+    <java classname="tdm.tool.TreeDiffMerge" fork="yes">
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build}" /> 
+      </classpath>
+      <arg value="--merge"/>
+      <arg file="mergecases/a13/b.xml"/>
+      <arg file="mergecases/a13/1.xml"/>
+      <arg file="mergecases/a13/2.xml"/>
+      <arg file="mergecases/a13/tmp.xml"/>
+    </java>
+    <echo 
+message="The test is successful if there are no errors, and the diff below is &lt;diff /&gt;"
+ />
+    <java classname="tdm.tool.TreeDiffMerge" fork="yes">
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build}" /> 
+      </classpath>
+      <arg value="--diff"/>
+      <arg file="mergecases/a13/tmp.xml"/>
+      <arg file="mergecases/a13/m.xml"/>
+    </java>
+    <delete file="mergecases/a13/tmp.xml" />
+  </target>
+
+  <target name="release" depends="compile">
+    <fail unless="3dm.version">
+    You need to set the 3dm.version ant property</fail>
+    <echo>Java used to build is version ${java.version}</echo>
+    <tstamp>
+      <format property="build.stamp" pattern="yyyy.MM.dd.hh.mm.ss" />
+    </tstamp>
+    <manifest file="${build-jar}/MANIFEST.MF">
+      <attribute name="Built-By" value="${user.name}"/>
+      <attribute name="Main-Class" value="tdm.tool.TreeDiffMerge"/>
+      <attribute name="Specification-Title" value="3dm" /> 
+      <attribute name="Specification-Version" value="${3dm.version}" />
+      <attribute name="Implementation-Title" 
+                value="3DM XML differencing and merging tool" />
+      <attribute name="Implementation-Version" 
+                value="${3dm.version}-${build.stamp}" />
+    </manifest>
+    <jar jarfile="${build-jar}/3dm-${3dm.version}.jar" basedir="${build}"
+         manifest="${build-jar}/MANIFEST.MF" >
+      <include name="tdm/**" />
+      <exclude name="tdm/test/**" />
+    </jar>
+    <tar destfile="${build-jar}/3dm-${3dm.version}-src.tar.gz"
+         basedir="."
+         compression="gzip"
+         includes=
+"build.xml,COPYING,contrib/*.xml,mergecases/**,src/**,usecases/**"
+         excludes="*~" 
+         longfile="gnu" />
+    <echo>Below is output from release jar using no args</echo>
+    <java classname="tdm.tool.TreeDiffMerge" fork="yes">
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build-jar}/3dm-${3dm.version}.jar" /> 
+      </classpath>
+    </java>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}" />
+    <delete dir="${tmpdir}" />
+  </target>
+
+  <target name="contrib-get" >
+    <ant antfile="contrib.xml" dir="contrib" target="binaries" />
+    <antcall target="clean" /> 
+    <antcall target="contrib-ok" />
+  </target>
+
+  <target name="contrib-get-src" >
+    <ant antfile="contrib.xml" dir="contrib" target="source" />
+  </target>
+
+  <target name="contrib-ok" >
+    <touch file="contrib/.binstamp" />
+  </target>
+
+  <target name="test-usecase-review-unzipper">
+    <unzip src="${oodoc}.sxw" dest="${tmpdir}" />
+    <copy file="${tmpdir}/Content.xml" tofile="${oodoc}.xml" />
+    <delete includeemptydirs="true">
+      <fileset dir="${tmpdir}" includes="**/*" excludes="${tmpdir}"/>
+    </delete>
+  </target>
+
+  <target name="test-unzipper" unless="review.unzipped">
+    <antcall target="test-usecase-review-unzipper">
+      <param name="oodoc" value="usecases/review/base" />
+    </antcall>
+    <antcall target="test-usecase-review-unzipper">
+      <param name="oodoc" value="usecases/review/branch1" />
+    </antcall>
+    <antcall target="test-usecase-review-unzipper">
+      <param name="oodoc" value="usecases/review/branch2" />
+    </antcall>
+    <antcall target="test-usecase-review-unzipper">
+      <param name="oodoc" value="usecases/review/branch3" />
+    </antcall>
+    <antcall target="test-usecase-review-unzipper">
+      <param name="oodoc" value="usecases/review/mergeb12" />
+    </antcall>
+    <antcall target="test-usecase-review-unzipper">
+      <param name="oodoc" value="usecases/review/mergeb123" />
+    </antcall>
+  </target>
+
+  <target name="test" depends="compile">
+    <!-- This test below is not 100% correct, but what the hey -->
+    <available file="usecases/review/base.xml" 
+               property="review.unzipped" />
+    <antcall target="test-unzipper" />
+    <echo message="Running tests, takes a while. (Sample point: 8 min on Athlon 1.3Ghz) "/>
+    <echo message="Test run results saved in file test.log"/>
+    <condition property="testclass" value="tdm.test.RootSuite" >
+      <not><isset property="testclass" /></not>
+    </condition>
+    <java classname="junit.textui.TestRunner" 
+          output="test.log" 
+          logError="true"
+          failonerror="true"
+          fork="true">
+      <!--jvmarg value="-verbose:class"/-->
+      <jvmarg value="-enableassertions"/>
+      <arg value="${testclass}"/>
+      <classpath>
+        <path refid="libpath" />
+        <pathelement path="${build}" /> 
+      </classpath>
+      <syspropertyset>
+        <propertyref prefix="tdm.test" />
+      </syspropertyset>
+    </java>
+  </target>
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+

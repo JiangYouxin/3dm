@@ -1,0 +1,82 @@
+// $Id: cases.txt,v 1.3 2001-01-25 17:42:56 ctl Exp $
+
+Merge cases: Purpose?
+
+- to demonstrate desired merging behaviour in various cases
+  (=> exact definition of reasonable merging behaviour??)
+- to test the merge tool against
+
+These are the merge cases
+(Mxx) is the case depicted
+[Mxx] is a similar case
+
+Insertion
+=========
+
+i1 Simple insertion i different subtrees (M18) [M14] 
+i2 Same subtree, end of list / same pos; can be seen as conflict (M19)
+i3 Several inserts in same subtree; can be seen as conflict (M16)
+
+Deletion
+========
+
+d1 Simple deletion in different subtrees (M13)
+d2 Deletion of same node (M21)
+d3 Several deletions in same subtree (M20)
+
+Conflicts cannot occur with deletions only.
+
+Updates
+=======
+
+
+u1 Update of differnt nodes (M12)
+u2 Update of same node, updates identical (possibly conflict all the same?)
+u3 CONFLICT: Same node, different updates  
+
+Moves
+=====
+
+m1 Moves in different childlist (renders uglily) (M24)
+m2 Moves in same childlist (M4)
+m3 Moves at different levels of same subtree (M5)
+m4 Move conflict RENDERING BUGS! (M22)
+m5 Move with shifting (M25)
+
+Copies
+======
+
+c1 Copies into different childlists RENDER PROBS
+c2 Copies to same childlist (M28)
+c3 Copy with shifting (M26)
+c4 CONFLICT: Differnt node to same dest (M27)
+c5 Copy with shift (M23)
+
+Combinations
+============
+
+	INS DEL UPD MOV CPY 
+a1	2       1            Simple combination of insert and update (M10)
+a2	    1   2	     Simple combination of del and update (M9)
+a3                  2   1    Moving the src-of-copy node, possibly a conflict? (M15)
+a4		    1   2    Case where a node does NOT reprsenet it's subtree (M8)
+a5		1       2    Regular case (M7)			
+a6	            1   2    Node rep. subtree, changes in subtree reflected (M2)
+a7		    2   1    Moving away an overcopied node (M29)
+a8          1           2    Copying a subtree, and deleting a node from it (M1)
+a9	            2   1    Copies generate different "models": possibly conflict (M11)
+a10		2   1        Update + swap (Jyrki's case) (M10B)
+a11	2           1        Does inserted move with previous? (M17)
+a12	2           1   1    Possible mov+ins conflict (same pos) (M32)
+a13	        1   2        Basic annotation (M3)
+a14	        1       2    Updates reflect to all copies (M6)
+
+
+Conflicts
+=========
+
+	INS DEL UPD MOV CPY 
+x1              2       1    Updating a cpy target (M28)
+x2          2           1    src-of-copy node deleted (M30)
+x3          2           1    dst-of-copy node deleted (M31)
+x4                  12       Ambigoius moving (M33)                      

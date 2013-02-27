@@ -1,0 +1,20 @@
+#!/bin/sh
+echo
+echo CASE C1
+./run-onecase c1
+echo
+echo CASE C2
+echo "1 conflict for deleting b, when it has become locked due to copy of c"
+./run-onecase c2
+echo
+echo CASE C3
+./run-onecase c3
+echo
+echo CASE C4
+echo 1 Conflict for copying nodes to the same destination
+./run-onecase c4
+grep -v '<' conflict.log
+echo
+echo CASE C5
+./run-onecase c5
+

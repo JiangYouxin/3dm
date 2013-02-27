@@ -1,0 +1,10 @@
+#!/bin/sh
+# =1=
+# Merging updates performed from simple->simple2 into complex
+echo TASK 1 
+3dm --merge ccs-simple.html ccs-simple-2.html ccs-complex.html gccs-complex-2.html
+# check
+echo "Not exactly as facit: chairman & secretary are outside font tags in merge,"
+echo "should be inside (=2 diffs)"
+echo "3rd diff = version string = OK"
+3dm --diff gccs-complex-2.html ccs-complex-2.html

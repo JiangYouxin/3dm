@@ -1,0 +1,13 @@
+#!/bin/sh
+echo
+echo CASE D1
+./run-onecase d1
+echo
+echo CASE D2
+./run-onecase d2
+echo
+echo CASE D3
+./run-onecase d3
+echo
+echo CASE D4
+./run-onecase d4

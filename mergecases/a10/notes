@@ -1,0 +1,2 @@
+Fails because matchings aren't generated as assumed in the merge, i.e. that
+the two subtrees rooted at $l$ are swapped. 

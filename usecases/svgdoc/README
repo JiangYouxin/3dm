@@ -1,0 +1,12 @@
+The inlined svg case
+====================
+
+How to run:
+
+modem.html contains the manual chapter with included SVG
+(no browsers can currently render it though)
+basefig.svg conatins the base modem image
+fullfig.svg conatins the completed modem image
+
+3dm basefig.svg fullfig.svg modem.html
+

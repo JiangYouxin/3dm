@@ -1,0 +1,70 @@
+$Id: results,v 1.1 2001-06-18 13:43:25 ctl Exp $
+
+=1=
+Result: PROBLEMS (As expected) + GLITCH
+
+As expected, the sloppy structure causes some changes not to be propagated
+to the homepage. Luckily, these unpropagated changes are visible in the
+conflict log:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<conflictlist>
+ <warnings>
+  <delete>
+Modifications in deleted subtree.
+   <node tree="merged" path="/0" />
+   <node tree="base" path="/0/1" />
+   <node tree="branch1" path="/0/1" />
+  </delete>
+  <delete>
+Modifications in deleted subtree.
+   <node tree="merged" path="/0" />
+   <node tree="base" path="/0/4" />
+   <node tree="branch1" path="/0/4" />
+  </delete>
+ </warnings>
+</conflictlist>
+
+The non-propagating fields was telephone number (as there is no exact text like
+this in homepage.html, the number is mentioned in a sententnce), and the zip
+(As it was combined with the city in the address field on the page).
+
+An unexpected glitch was that the update "Peräseinäjoki" -> "Takaseinäjoki"
+was reflected to the wrong location ("I work as a techer at the elmentary 
+school in Takaseinjoki").
+
+This glitch could have been avoided if matching nodes a required to be
+"clustered" in some sense, i.e. if a node is moved a long distance, it's
+neighbours should be moved to approx the same location.
+
+The changes can be checked with
+3dm -e --merge homepage.html ghomepage2.html homepage.html > /dev/null
+
+yielding
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+ <update path="/0/1/7/0/3/0" src="/0/1/7/0/3/0" originTree="branch1" originNode="/0/1/7/0/3/0" />
+ <update path="/0/1/9/0/2" src="/0/1/9/0/2" originTree="branch1" originNode="/0/1/9/0/2" />
+</edits>
+
+Which is correct!
+
+=2=
+Results: AS EXPECTED (Phoneno update missing)
+
+The phoneno update is missed, ast a corresponding node does not exist in the
+dst page (the no is mentioned in a sentence). Conflict warnings to the rescue,
+they warn about an update being lost:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<conflictlist>
+ <warnings>
+  <delete>
+Modifications in deleted subtree.
+   <node tree="merged" path="/0/1" />
+   <node tree="base" path="/0/1/8" />
+   <node tree="branch1" path="/0/1/8" />
+  </delete>
+ </warnings>
+</conflictlist>
+

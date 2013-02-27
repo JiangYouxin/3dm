@@ -1,0 +1,12 @@
+<!-- $Id: m.xml,v 1.2 2001-06-25 14:53:52 ctl Exp $ -->
+<!-- WARNING: Update in deleted subtree -->
+<!-- There should be no warning if the update e->e_ is removed! -->
+<R>
+        <d>
+                <g/>
+                <f/>
+        </d>
+        <a/>
+        <b/>
+</R>
+

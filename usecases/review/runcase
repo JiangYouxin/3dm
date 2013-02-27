@@ -1,0 +1,22 @@
+#!/bin/sh
+# $Id: runcase,v 1.2 2001-06-19 12:35:01 ctl Exp $
+#
+# =1=
+echo TASK 1
+3dm --merge base.xml branch1.xml branch2.xml gmergeb12.xml
+# check
+echo "3 Diffs: 1) dc:date = 2001-04-02T11:35:12"
+echo "2) edit-cycles=6 and 3) document-statistics"
+3dm --diff gmergeb12.xml mergeb12.xml
+#
+echo TASK 2
+# First, run conflicting branch 3 that generates sequ conflict
+echo "This first version has a sequ conflict (locs=56,83) for the section"
+echo '"Cannot create lockfile. Sorry"'
+echo Correct result is a snip of the conflict file displaying the seq conflict
+3dm --merge base.xml gmergeb12.xml branch3-cf.xml > /dev/null
+grep -A 5 seq conflict.log
+echo And now, the true run
+3dm --merge base.xml gmergeb12.xml branch3.xml gmergeb123.xml
+echo "OK=3 Diffs for date,edcycles and metainfo"
+3dm --diff gmergeb123.xml mergeb123.xml

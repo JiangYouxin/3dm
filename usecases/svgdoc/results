@@ -1,0 +1,10 @@
+$Id: results,v 1.1 2001-06-18 14:58:04 ctl Exp $
+
+Results: OK!
+
+The most severe problem is a slowness (40s) that occurs due to extensive fuzzy 
+matching between the original paths and the inserted ones.
+
+A cleaner matching (no false structcopies) is obtained by having a large 
+enough -c
+ 

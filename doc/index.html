@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+                                       
+  <meta name="author" content="ctl">
+  <title>The "3DM" XML 3-way Merging and Differencing Tool</title>
+<style>
+h1, h2 {font-family: Helvetica;}
+</style>
+</head>
+  <body>
+ 
+<h1>The "3DM" XML 3-way Merging and Differencing Tool&nbsp;</h1>
+<i>Keywords: tree, diff, differencing, merge, merging, 3-way, XML, 
+treediff, xmldiff</i> 
+<h2>1. What is 3DM?</h2>
+
+
+The 3DM tool is a tool for performing 3-way merging and differencing
+of XML files. Unlike line-based tools, such as <tt>diff</tt> and
+<tt>diff3</tt>, 3DM is aware of the structure of the processed XML
+documents.  3DM is not limited to update/insert/delete operations,
+it also handles
+<b>moves</b>       and <b>copies</b> of entire subtrees. 3DM is not
+reliant  on edit   histories;  the only input needed are the XML files. The
+tool was  implemented   as a part  of my master's thesis 
+(<a href="thesis.pdf">2.0M pdf, updated 26/12/2001</a>,
+<a href="thesis.ps.gz">3.9M .ps.gz, updated 26/12/2001</a>)
+          , which is the currently recommended reading for those interested 
+ in  detailed   examples (chapter 2 and 10) and the algorithms (chapters 5-9).
+<p>A more elegant (in my opinion) variation of the algorithm discards support
+for copy operations, at the same time gaining enormously in clarity and
+simplicity. The algorithm is described in the paper<br>
+Tancred Lindholm. <i>A Three-way Merge for XML Documents</i>. 
+In ACM Symposium on Document Engineering, October 2004<br>
+An author's version can be found 
+<a href="http://www.hiit.fi/files/fi/fc/papers/doceng04-pc.pdf">here</a>.
+<p>
+Building on the ideas of 3dm, for XML differencing there is also the
+<i><a href="http://fc-xmldiff.googlecode.com/">Fugo XML Differencing tool</a></i>.
+Compared to 3dm, this tool is much faster an less memory intensive, due to a much 
+simpler matching stage. If you are looking for an XML differencing tool, you
+may want to take a look at it. <i>Update Jun 26, 2009: Note that the
+project is now located at <a href="http://fc-xmldiff.googlecode.com/">http://fc-xmldiff.googlecode.com/</a>,
+as the old project site (hoslab.cs.helsinki.fi) has been decomissioned</i>.
+
+<h2>2. News</h2>
+<ul>
+  <li>26.6.2009: Updated link to the Fugo XML Differencing tool
+<li>7.3.2006: Updated web pages, added link to DocEng 2004 paper</li>
+<li>7.2.2006: Releases 0.1.0 and 0.1.5beta1</li>
+<li>1.1.2006: Code that handles XML specifics (e.g. comments,verbatim differencing,  DTDs) better
+  is available in CVS on the verbatim branch.
+</ul> 
+
+<h2>3. An XML differencing example</h2>
+
+Consider the two XML files (merge case A16 in the thesis):<p>
+  
+<table cellpadding="0" cellspacing="0" border="1" bgcolor="#ffff99">
+   <tbody>
+     <tr>
+       <td valign="Top"><b>b.xml</b><br>
+       </td>
+       <td valign="Top"><b>2.xml</b><br>
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top"><tt>&lt;R&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;a&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;b/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;m/&gt;</tt><sup>5</sup><tt><br>
+         &nbsp;&nbsp;&nbsp; &lt;/a&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;c&gt;</tt><sup>3</sup><tt><br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+         &lt;/R&gt;</tt></td>
+       <td valign="Top"><tt>&lt;R&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;m/&gt;<br>
+         &lt;/R&gt;</tt></td>
+     </tr>
+   
+  </tbody> 
+</table>
+ <br>
+    The numbers are node identifiers, assigned according to the BFS traversal
+  of the XML&nbsp; parse tree. They are not part of the XML file. The difference
+  is obtained by running:<br>
+ <br>
+ <tt>3dm --diff b.xml 1.xml</tt><br>
+ <br>
+         And looks like this:<br>
+ <br>
+ 
+<table cellpadding="0" cellspacing="0" border="1" width="400" bgcolor="#ffff99">
+   <tbody>
+     <tr>
+       <td valign="Top"><tt>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+       &lt;diff&gt;<br>
+       &nbsp;&lt;diff:copy src="3" dst="1" /&gt;<br>
+       &nbsp;&lt;diff:copy src="3" dst="1" /&gt;<br>
+       &nbsp;&lt;diff:copy src="5" dst="1" /&gt;<br>
+       &lt;/diff&gt;<br>
+       </tt></td>
+     </tr>
+   
+  </tbody> 
+</table>
+ <br>
+    The <tt>src</tt> attribute refers to nodes in <tt>b.xml</tt> by their 
+node  identifier. &nbsp;The diff says that <tt>2.xml</tt> is formed by setting
+ the children of <tt>&lt;R&gt;</tt> to the subtrees rooted at node 3 (twice)
+ and node 5 from <tt>b.xml</tt>. The differencing algorithm and the format
+ of the diff is described in chapter 8 of the thesis. <br>
+ 
+<p><b>A note about copy operations:</b> in some cases, you may not
+want copy operations in the diff, e.g., if copies do not make sense with
+the input that you are using.  In this case, use the <code>-c</code>
+flag to increase the threshold for copies to some large value, for instance
+<code>-c 2000000000</code>.
+This will effectively turn off the search for copies during matching.
+
+<h2>4. A 3-way merging example</h2>
+    Consider the three XML files shown below: a base file (<tt>b.xml</tt>
+)  and two parallell versions (branches), <tt>1.xml</tt> and <tt>2.xml</tt>
+,  obtained by editing <tt>b.xml</tt> in different ways. When performing
+a 3-way  merge of these files, we get a file that contains both the changes
+between  <tt> b.xml</tt> and <tt>1.xml</tt> as well as the changes between
+<tt>b.xml</tt>    and <tt>2.xml</tt>. The changes between <tt>b.xml</tt>
+and <tt>1.xml</tt>    are: <br>
+ 
+<ol>
+   <li><tt>&lt;R&gt;</tt> is updated to <tt>&lt;Rp&gt;</tt></li>
+   <li><tt>&lt;i&gt;</tt> has been inserted below <tt>&lt;m&gt;</tt></li>
+ 
+</ol>
+   The changes between <tt>b.xml</tt> and <tt>2.xml</tt> are:<br>
+ 
+<ol>
+   <li>The subtree rooted at <tt>&lt;a&gt;</tt> has been deleted, except
+for      <tt>&lt;m&gt;</tt> which is moved as the last child of <tt>&lt;R&gt;</tt></li>
+   <li>The subtree rooted at <tt>&lt;c&gt;</tt> has been copied<br>
+   </li>
+ 
+</ol>
+ <br>
+ 
+<table cellpadding="0" cellspacing="0" border="1" width="400" bgcolor="#ffff99">
+   <tbody>
+     <tr>
+       <td valign="Top"><b>1.xml</b><br>
+       </td>
+       <td valign="Top"><b>b.xml</b><br>
+       </td>
+       <td valign="Top"><b>2.xml</b><br>
+       </td>
+     </tr>
+     <tr>
+       <td valign="Top"><tt>&lt;Rp&gt;<br>
+    &nbsp;&nbsp;&nbsp; &lt;a&gt;<br>
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;b/&gt;<br>
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;m&gt;<br>
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;i/&gt;<br>
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/m&gt;<br>
+    &nbsp;&nbsp;&nbsp; &lt;/a&gt;<br>
+    &nbsp;&nbsp;&nbsp; &lt;c&gt;<br>
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+    &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+    &lt;/Rp&gt;</tt><br>
+       </td>
+       <td valign="Top"><tt>&lt;R&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;a&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;b/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;m/&gt;</tt><tt><br>
+         &nbsp;&nbsp;&nbsp; &lt;/a&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;c&gt;</tt><tt><br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+         &lt;/R&gt;</tt></td>
+       <td valign="Top"><tt>&lt;R&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;cc/&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;/c&gt;<br>
+         &nbsp;&nbsp;&nbsp; &lt;m/&gt;<br>
+         &lt;/R&gt;</tt><br>
+       </td>
+     </tr>
+   
+  </tbody> 
+</table>
+ <br>
+   The 3-way merge is performed by running the command shown below. You can 
+ ignore the meaning of <tt>-c 0</tt> for now. <br>
+ <br>
+ <tt>3dm -c 0 --merge b.xml 1.xml 2.xml</tt><br>
+ <br>
+   The result is shown below. Note how the changes from both branches have
+ been integrated.<br>
+ <br>
+ 
+<table cellpadding="0" cellspacing="0" border="1" width="400" bgcolor="#ffff99">
+   <tbody>
+     <tr>
+       <td valign="Top"><tt>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+   &lt;Rp&gt;<br>
+   &nbsp;&lt;c&gt;<br>
+   &nbsp; &lt;cc /&gt;<br>
+   &nbsp;&lt;/c&gt;<br>
+   &nbsp;&lt;c&gt;<br>
+   &nbsp; &lt;cc /&gt;<br>
+   &nbsp;&lt;/c&gt;<br>
+   &nbsp;&lt;m&gt;<br>
+   &nbsp; &lt;i /&gt;<br>
+   &nbsp;&lt;/m&gt;<br>
+   &lt;/Rp&gt;</tt><tt><br>
+       </tt></td>
+     </tr>
+   
+  </tbody> 
+</table>
+<p>
+   The merging algorithm is described in chapers 6-7 of the thesis. As in the differencing case,
+ the threshold for detecting copied data can be controlled with the <code>-c</code>
+option.
+ 
+<h2>4. Obtaining 3DM</h2>
+   The Java source of &nbsp;3DM is released under the Lesser Gnu Public License
+(LGPL). The latest version can be found form the Files section of the
+<a href="http://developer.berlios.de/projects/tdm/">3dm project page</a>. 
+To save you a few clicks, here are links to release 0.1.0:
+<ul>
+<li><a href="http://prdownload.berlios.de/tdm/3dm-0.1.0.jar">3dm 0.1.0 binary [.jar]</a></li>
+<li><a href="http://prdownload.berlios.de/tdm/3dm-0.1.0-src.tar.gz">3dm 0.1.0 sources [.tar.gz]</a></li>
+</ul>
+
+To run 3dm, you will also need a SAX2 compilant XML parser (the
+default parser is the <a
+href="http://xml.apache.org/xerces-j/">Xerces parser</a> from the
+Apache project) and the GNU java-getopt package (<a
+href="http://www.urbanophile.com/arenn/hacking/download.html"> home
+page</a> , <a href="java-getopt-1.0.8.jar">local copy of
+java-getopt-1.0.8.jar</a> ). <br>
+ 
+<h2>5. Running 3DM</h2>
+
+Running 3dm is straightforward, just start java with Xerces,
+java-getopt and 3dm.jar (or the directory of compiled classes) in the
+classpath and <tt>tdm.tool.TreeDiffMerge</tt> as main class. Below
+are shell scripts for Linux and Windows.<br>
+For instance:<br>
+<code>java -cp java-getopt-1.0.8.jar:xerces.jar:3dm.jar tdm.tool.TreeDiffMerge</code>   
+ 
+<h2>6. Visualizing the merge</h2>
+
+3dm can produce a "merge log" that lists the changes in the merged
+file compared to the base version. I've written a quick hack to
+visualize the merge log (<a href="treediff_src.tar.gz">sources
+.tar.gz</a> , <a href="treediff_src.zip">sources .zip</a> and <a
+href="treediff.jar">.jar</a> file). The main class is
+<tt>TreeDiff</tt>, and it requires a SAX2 parser in the classpath; the
+.jar file is compiled for Xerces.&nbsp; The figure below visualizes
+the merge log obtained by running the previously mentioned merge
+example.<br> <br> <img src="44.png" alt="TreeDiff screenshot"> <br>
+ 
+<h2>7. Current Limitations</h2>
+
+The 0.1.0 release concentrated on core features, leaving out any "XML corner cases", 
+such as:<br> 
+ 
+<ol>
+   <li>DTD processing. 3DM simply assumes the DTD of the input files are
+identical</li>
+   <li>More intelligent processing of entities. Currently 3DM (or actually 
+the XML parser) expands all entities. A better alternative would be to merge 
+entity declarations.</li>
+ 
+</ol>
+ See chapter 10 of the thesis for a more in-depth description of the limitations.<br>
+
+ 
+<h2>8. Development</h2>
+An open source development project is being set up here at berliOS. Some links:
+<ul>
+<li><a href="http://developer.berlios.de/project/?group_id=400">Project page</a></li>
+<li><a href="http://developer.berlios.de/cvs/?group_id=400">CVS access</a></li>
+</ul>
+
+<hr width="100%" size="1" noshade="">
+<table width="100%">
+<tr>
+<td>
+<i>$Id: index.html,v 1.11 2009-06-26 08:47:25 ctl Exp $</i><br>
+ <br>
+</td>
+<td align="right">
+<a href="http://developer.berlios.de">
+<img src="http://developer.berlios.de/sflogo.php?group_id=400&type=1" width="124" height="32" border="0" alt="BerliOS Logo"></A> 
+</td>
+</tr>
+</table> 
+<!-- Track views with Google analytics -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+//alert('Tracking...');
+_uacct = "UA-2543323-1";
+urchinTracker();
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+$Id: results,v 1.2 2001-06-19 12:35:01 ctl Exp $
+ 
+=1=
+
+Results: A-OK!
+
+"Random" tags inserted by OpenOffice made life slightly harder. (Random=
+changes that occured without any editing). 
+
+Natural conflicts also occured from tags giving modify date, edit cycles
+and document statistics.
+
+Random edits: 
+
+In merged: <text:span /> near kppd (no purpose) (Tree comp fails)
+ as this facit file was made by hand, it was ok to remove <text:span />
+
+letter-spacing="normal" in base version. WHere did it come from?
+Well, at least I got to test attr-by-attr merging!
+
+Also, the para styles of the last list changed to "P3" 
+
+=> Conclusion: DOM Changes happening without the user doing anything can cause 
+false conflicts (not in this case) and "stealth" edits in the output.
+
+Conflicts:
+
+1) =  <dc:date>2001-04-02T11:35:12</dc:date>
+2) =  <meta:document-statistic meta:table-count="0" me
+3) = <meta:editing-cycles>6</meta:editing-cycles>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<conflictlist>
+ <conflicts>
+  <update>
+Node updated in both branches, using branch 1
+   <node tree="merged" path="/0/0/3/0" />
+   <node tree="base" path="/0/0/3/0" />
+   <node tree="branch1" path="/0/0/3/0" />
+   <node tree="branch2" path="/0/0/3/0" />
+  </update>
+  <update>
+Node updated in both branches, using branch 1
+   <node tree="merged" path="/0/0/10" />
+   <node tree="base" path="/0/0/10" />
+   <node tree="branch1" path="/0/0/10" />
+   <node tree="branch2" path="/0/0/10" />
+  </update>
+ </conflicts>
+ <warnings>
+  <update>
+Node updated in both branches, but updates are equal
+   <node tree="merged" path="/0/0/4/0" />
+   <node tree="base" path="/0/0/4/0" />
+   <node tree="branch1" path="/0/0/4/0" />
+   <node tree="branch2" path="/0/0/4/0" />
+  </update>
+ </warnings>
+</conflictlist>
+
+=2=
+
+Result: A-OK!
+
+The run is split into two, first with branch3-cf that yields the seq. 
+conflict for "cannot create lockfile. sorry"
+
+In the second case we get 2 conflicts and 2 warnings. The second warning
+(mod in deltree) is interesting, because it refelects modfifcations in
+b3 that are deleted in B2:
+
+For Dial-in I Keep Getting "NNN of inittab invalid"
+  Make sure you are using the correct syntax for your version of init. 
+  The different init's that are out there use different syntax in the 
+  /etc/inittab file. Make sure you are using the correct syntax for your 
+  version of getty (see man getty).
+                    ^^^^^^^^^^^^^^^
+                    added in B3
+
+The other conflicts & warning are due to date, meta and edcycles.(see above
+for which is which by path)
+
+<?xml version="1.0" encoding="UTF-8"?>
+<conflictlist>
+ <conflicts>
+  <update>
+Node updated in both branches, using branch 1
+   <node tree="merged" path="/0/0/3/0" />
+   <node tree="base" path="/0/0/3/0" />
+   <node tree="branch1" path="/0/0/3/0" />
+   <node tree="branch2" path="/0/0/3/0" />
+  </update>
+  <update>
+Node updated in both branches, using branch 1
+   <node tree="merged" path="/0/0/10" />
+   <node tree="base" path="/0/0/10" />
+   <node tree="branch1" path="/0/0/10" />
+   <node tree="branch2" path="/0/0/10" />
+  </update>
+ </conflicts>
+ <warnings>
+  <update>
+Node updated in both branches, but updates are equal
+   <node tree="merged" path="/0/0/4/0" />
+   <node tree="base" path="/0/0/4/0" />
+   <node tree="branch1" path="/0/0/4/0" />
+   <node tree="branch2" path="/0/0/4/0" />
+  </update>
+  <delete>
+Modifications in deleted subtree.
+   <node tree="merged" path="/0/6" />
+   <node tree="base" path="/0/6/22" />
+   <node tree="branch2" path="/0/6/26" />
+  </delete>
+ </warnings>
+</conflictlist>

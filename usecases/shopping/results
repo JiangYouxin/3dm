@@ -1,0 +1,79 @@
+$Id: results,v 1.2 2001-06-18 08:35:23 ctl Exp $
+
+Result log for shopping list
+NOTE: Rev 1.1 of this log contains results before the following changes:
+   1) removeSmallCOpies tries to identify original
+   2) COPY_THRESHOLD => 128
+   3) remSmCp and matchSimUnm. changed order (yields correct update in run 3)
+
+=1= 
+Result: OK 
+
+Breaks with too low copy threshold. (inserted nodes treated as copies) 
+Yields one confl. warning due to sequencing inserts, OK.
+
+tko-dhcp-42:~/ubidoc/usecases/shopping> 3dm --merge L0.xml L3.xml L2.xml g4.xml
+3DM XML Tree Differencing and Merging Tool. PROTOTYPE: $Revision: 1.2 $
+Warning: 1 conflict warnings.
+tko-dhcp-42:~/ubidoc/usecases/shopping> cat conflict.log 
+<?xml version="1.0" encoding="UTF-8"?>
+<conflictlist>
+ <warnings>
+  <insert>
+Insertions/copies in both branches after the context nodes. Sequencing the insertions.
+   <node tree="merged" path="/0" />
+   <node tree="base" path="/0/2" />
+   <node tree="branch1" path="/0/2" />
+   <node tree="branch2" path="/0/2" />
+  </insert>
+ </warnings>
+</conflictlist>
+
+=2=
+Result: OK 
+
+Warnings about sequencing insertions are OK: After salmon L4 adds apples &
+comic, L1 adds oriange juice & toilet paper. 
+Breaks with too low copy threshold. (inserted nodes treated as copies) 
+
+Bug in the original case: merge & computer updates were both in L5. Now split
+so L5 = after merge, L6 = after computer has re-evaluated some fields
+
+=3=
+
+Result: OK
+
+The correct updating of Toast qty (packets) depends on order of matchSimUnm
+and removeSmaCop that identifies "original" instance. (Req Matching 1.15)
+Edit script was checked by running the markup rutine in class TreeDM and
+reading marked.xml.
+
+=4=
+
+Result: OK
+
+Diff + patch works. In this case, however, patch.xml is larger than the output
+L7.xml, so sending a patch is useless in terms of saving bandwidth!
+
+A text patch produced by diff is also > L7, and slightly smaller than the XML
+variant. See this:
+ 
+tko-dhcp-42:~/ubidoc/usecases/shopping> ls -l pa* g7.xml L7.xml
+-rw-r--r--    1 ctl      ctl          1301 Jun 15 15:58 L7.xml
+-rw-r--r--    1 ctl      ctl          1135 Jun 18 11:09 g7.xml
+-rw-r--r--    1 ctl      ctl          1570 Jun 18 11:12 patch.txt
+-rw-r--r--    1 ctl      ctl          1649 Jun 18 11:09 patch.xml
+tko-dhcp-42:~/ubidoc/usecases/shopping> 
+
+Conclusion:
+
+What didn't work: - patch space saving
+                  - Case induced changes to Matching.java (old vers < 1.14)
+                    had problems with tuining copythreshold
+		  - Bugs in the case (invalid XML, one step forgotten)
+	
+What worked:	  - Everything!
+                    = merging, generating edit script (even updates correct!),
+                      diffing & patching
+
+ 

@@ -1,0 +1,30 @@
+#!/bin/sh
+echo
+echo CASE X1
+echo "1 Conflict: same node updated in both branches"
+./run-onecase x1
+grep -v '<' conflict.log
+echo
+echo CASE X2
+echo "1 Conflict: source of copy deleted"
+./run-onecase x2
+grep -v '<' conflict.log
+echo
+echo CASE X3
+./run-onecase x3
+echo
+echo CASE X4
+echo "1 Conflict: sequencing conflict"
+./run-onecase x4
+grep -v '<' conflict.log
+echo
+echo CASE X5
+echo "1 Warning: updates in deleted subtree (e->e_)"
+./run-onecase x5
+grep -v '<' conflict.log
+echo
+echo CASE X6
+echo "1 BUG: Infinite recursion, should die after ~100  recursions"
+./run-onecase x6
+
+

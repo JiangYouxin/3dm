@@ -1,0 +1,9 @@
+<!-- $Id: b.xml,v 1.1 2001-03-28 10:41:38 ctl Exp $ -->
+<!-- Test correct detection of moved nodes; these close dels 
+	should be possible -->
+<R>
+	<a/>
+	<b/>
+	<c/>
+	<d/>
+</R>

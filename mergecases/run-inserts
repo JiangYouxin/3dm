@@ -1,0 +1,14 @@
+#!/bin/sh
+echo
+echo CASE I1
+./run-onecase i1
+echo
+echo CASE I2
+echo 1 warning about sequencing inserts
+./run-onecase i2
+grep -v '<' conflict.log
+echo
+echo CASE I3
+./run-onecase i3
+
+

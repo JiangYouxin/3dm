@@ -1,0 +1,18 @@
+#!/bin/sh
+echo
+echo CASE M1
+./run-onecase m1
+echo
+echo CASE M2
+./run-onecase m2
+echo
+echo CASE M3
+./run-onecase m3
+echo
+echo CASE M4
+echo 1 Conflict on move of same node to different locations
+./run-onecase m4
+grep -v '<' conflict.log
+echo
+echo CASE M5
+./run-onecase m5

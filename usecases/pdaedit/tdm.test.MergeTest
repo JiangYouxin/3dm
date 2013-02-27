@@ -1,0 +1,12 @@
+# $Id: tdm.test.MergeTest,v 1.2 2006-02-03 11:27:45 ctl Exp $
+# =1=
+# Merging updates performed from simple->simple2 into complex
+# Not exactly as facit: chairman & secretary are outside font tags in merge,
+# should be inside (=2 diffs)"
+# 3rd diff = version string = OK"
+# ccs-complex-2-0proto1_9_1.html is baseline from corresponding CVS tag
+base=ccs-simple.html 
+a=ccs-simple-2.html 
+b=ccs-complex.html
+facit=ccs-complex-2.html ccs-complex-2-0proto1_9_1.html
+expect=ccs-complex-2-0proto1_9_1.html

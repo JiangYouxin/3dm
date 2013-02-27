@@ -1,0 +1,31 @@
+EditNo	Branch1					Branch 2			Branch 3
+1	Standrad paragraph style changed	-				-
+        to indent first line, space before
+	paragraph
+2	-					Space removed between		- 
+						"wvdialconf" and question
+                                                mark
+3	-					-				Text deleted
+4	- - replaced with -			-				-
+5	No response in italics. * and extra
+        space removed at start of list items	-				-
+6	Style changed to "Heading 2"		-				-
+7	-					Text deleted			-
+8	-					-				Paragraph moved here	
+9	-					Reformatting of words		-
+						(Source style)	
+10	-					Paragraph deleted		Text inserted
+11	-					-				Text style changed
+12	Text reformatted. The text is several   -				-
+        paragraphs in base, but a single paragraph
+        with hard line breaks in B1
+13	-					-				Text styles changed
+14	-					-				Pargaraph moved away
+										(see edit 8)
+15	-					-				Paragraph deleted
+16	-					-				Paragraph deleted
+17	-					Paragraph moved here		-
+18	-					Moved away (see 17)		Moved way (see 20)
+19	-					Fixed spellimng error
+						(conflcit->conflict>		-
+20	-					-				Paragraph moved here

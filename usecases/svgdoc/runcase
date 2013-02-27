@@ -1,0 +1,7 @@
+#!/bin/sh
+# $Id: runcase,v 1.1 2001-06-18 14:58:04 ctl Exp $
+# =1=
+# Merge figure updates into modem.html
+3dm --merge basefig.svg fullfig.svg modem.html gfinal.html
+# check
+3dm --diff gfinal.html final.html 

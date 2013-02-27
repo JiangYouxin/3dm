@@ -1,0 +1,13 @@
+#!/bin/sh
+echo CASE U1
+./run-onecase u1
+echo CASE U2
+echo 1 warning about equal updates
+./run-onecase u2
+grep -v '<' conflict.log
+echo CASE U3
+echo 1 Conflict on update of node
+./run-onecase u3
+grep -v '<' conflict.log
+
+

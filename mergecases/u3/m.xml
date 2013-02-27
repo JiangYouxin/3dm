@@ -1,0 +1,7 @@
+<!-- $Id: m.xml,v 1.2 2001-06-25 08:36:41 ctl Exp $ -->
+<!-- AMBIGOUS: This file reflects a policy of taking the
+     update from branch 1 when updates conflict -->
+<R>
+	<a1/>
+	<b/>
+</R>

@@ -1,0 +1,23 @@
+# $Id: tdm.test.MergeTest,v 1.1 2006-02-02 17:42:58 ctl Exp $
+# =1=
+# First sync task: Sync Mr V's changes (L2) and Liisas (L3) into the
+# centralized list (L0) output = L4
+# The calling order is L3 L2 to get the inserts in facit order
+#
+base=L0.xml 
+a=L3.xml 
+b=L2.xml 
+facit=L4.xml
+expect=L4.xml
+
+# =2=
+# Update the combined human list (l4) to the suggested list (l1) => l5
+#
+1.base=L0.xml 
+1.a=L4.xml 
+1.b=L1.xml 
+1.facit=L5.xml
+1.expect=L5.xml
+
+# =3=: Currently not supported by test
+# =4=: Currently not supported by test

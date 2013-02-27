@@ -1,0 +1,19 @@
+<!-- $Id: m.xml,v 1.4 2001-06-25 10:47:03 ctl Exp $ -->
+<!-- base v1.2 fixed lack-of-context problem. Just forgot to update m.xml -->
+<R>
+        <s2>
+                <p2/>
+        </s2>
+        <s1>
+                <p1/>
+        </s1>
+        <s3>
+                <p3/>
+        </s3>
+        <s1>
+                <p1/>
+        </s1>   
+</R>
+
+
+

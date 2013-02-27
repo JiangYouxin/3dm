@@ -1,0 +1,20 @@
+#!/bin/sh
+# $Id: runcase,v 1.1 2001-06-18 13:43:25 ctl Exp $
+
+# =1=
+# Merging the changes from the profile to the home page
+#
+echo TASK1
+3dm -e --merge personalia.xml personalia2.xml homepage.html ghomepage2.html
+# check
+echo The check should yield 3 diffs. One for malplaced peraseinajoki update,
+echo one for the missing phoneno update and one for unupdated zip+city 
+3dm --diff ghomepage2.html homepage2.html
+
+# =2=
+# Merging chages from homepage into infopage
+#
+3dm --merge homepage.html homepage3.html maija-i.html gmaija-i2.html
+# check
+echo The check should yield one diff for the unupdated telno
+3dm --diff gmaija-i2.html maija-i2.html

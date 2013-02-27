@@ -1,0 +1,9 @@
+<!-- $Id: m.xml,v 1.2 2001-06-25 14:53:52 ctl Exp $ -->
+<!-- This is not a conflict at all! 
+     Could maybe be regared as a context broken conflict -->
+<R>
+	<a/>
+	<a/>
+</R>
+
+

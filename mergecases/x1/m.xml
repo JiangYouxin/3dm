@@ -1,0 +1,8 @@
+<!-- $Id: m.xml,v 1.2 2001-06-25 14:53:52 ctl Exp $ -->
+<!-- CONFLICT: Same node updated differently (a->b1,b2) -->
+<R>
+	<a/>
+	<b2/>
+</R>
+
+

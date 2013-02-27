@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!-- $Id: contrib.xml,v 1.3 2006-02-02 16:08:21 ctl Exp $ -->
+<!-- 
+
+Contrib builder
+===============
+
+The purpose of this build file is to fetch all required contrib stuff from
+a reliable source. The main mechanism is the <wget> macro which has the
+following attributes. 
+
+id: Unqiue id of the task. You must assign a unique id to the task 
+    that Ant can use for property names.
+
+target: name of target file that is fetched
+
+href1,href2: Links to the package holding the target file. href1 is first tried,
+then href2 if href1 fails. Note use of ${proto} prefix which allows us to
+swap all URIs to e.g. point to the local file system (fast testing).
+
+sha: sha1 hash that the target file must have after download. Used to
+verify that we got the right file. We also check the hash before downloading
+to see if perhaps the target is already up-to-date. Thus, if a hash is given,
+we only download a file if necessary.
+
+target.get: Name to store downloaded package in. Set to target is not
+explicitly given. Use with unpack
+
+unpack1,unpack2: Ant tasks to call to unpack the downloaded packages.
+unpack1 is for href1, unpack2 for href2.
+
+unpackdir: Passed as a propoert to unpacker; set to . if not given.
+Used here for unpacking to a named subdir of ${src} 
+
+Source packages are handled by downloading the package to ${sarch},
+checking its hash, and then unpacking to ${src}
+
+-->
+
+<project name="3dm-contrib" default="binaries" basedir=".">
+
+  <!-- Default soureforge mirror -->
+  <property name="sf-mirror" value="switch" />
+  <property name="lib" value="jar" />
+  <property name="sarch" value="src/archives" />
+  <property name="csrc" value="src" />
+  <!-- Use of ${proto} as URI prefix allows us to easily test with
+       contrib modules on a local fs -->
+  <property name="contrib.uri.prefix" value="http:/" />
+  <property name="proto" value="${contrib.uri.prefix}" />
+  <property name="sforge" 
+    value="${proto}/${sf-mirror}.dl.sourceforge.net/sourceforge" />
+  <tempfile property="temp.file" />
+  <tempfile property="temp.dir" />
+
+  <import file="contrib-helper.xml" />
+
+  <target name="binaries" >
+    <mkdir dir="${sarch}" />
+    <mkdir dir="${lib}" />
+
+    <!--java-getopt-1.0.12.jar-->
+    <wget id="java-getopt"
+          href1=
+"${proto}/www.urbanophile.com/arenn/hacking/getopt/java-getopt-1.0.12.jar"
+          target="${lib}/java-getopt-1.0.12.jar"
+          sha="9000468778bc51f358f5487b2e0c3db0f47af169" />
+
+    <wget id="junit"
+          href1="${sforge}/junit/junit3.8.1.zip"
+          target="${lib}/junit.jar"
+          target.get="${sarch}/junit3.8.1.zip"
+          unpack1="unpack-junit"
+          sha="99129f16442844f6a4a11ae22fbbee40b14d774f" />
+
+    <!--xercesImpl.jar, xmlParserAPIs.jar-->
+    <wget id="xerces-impl"
+          href1=
+"${proto}/archive.apache.org/dist/xml/xerces-j/old_xerces2/Xerces-J-bin.2.4.0.tar.gz"
+          target="${lib}/xercesImpl.jar"
+          target.get="${temp.file}"
+          unpack1="unpack-xerces-bin"
+          sha="9d4fca1a12e9e06764eb530e8de2353921f0e437" />
+
+    <wget id="xml-parser-apis"
+          href1=
+"${proto}/archive.apache.org/dist/xml/xerces-j/old_xerces2/Xerces-J-bin.2.4.0.tar.gz"
+          target="${lib}/xmlParserAPIs.jar"
+          target.get="${temp.file}"
+          unpack1="unpack-xerces-bin"
+          sha="5f3baec73262ebebc87a457fb24012bedb6f0ca6" />
+    
+  </target>
+
+  <target name="unpack-xerces-bin" >
+    <mkdir dir="${temp.dir}" />
+    <untar src="${target.get}" dest="${temp.dir}" compression="gzip" />
+    <copy file="${temp.dir}/xerces-2_4_0/xercesImpl.jar" tofile="${lib}/xercesImpl.jar" 
+          overwrite="true" />
+    <copy file="${temp.dir}/xerces-2_4_0/xmlParserAPIs.jar" tofile="${lib}/xmlParserAPIs.jar" 
+          overwrite="true" />
+    <delete dir="${temp.dir}" />
+    <delete file="${target.get}" />
+  </target>
+
+  <target name="unpack-junit" >
+    <unzip src="${target.get}" dest="${csrc}" />
+    <copy file="${csrc}/junit3.8.1/junit.jar" tofile="${lib}/junit.jar" 
+          overwrite="true" />
+  </target>
+
+  <target name="source" >
+    <mkdir dir="${sarch}" />
+
+    <!--java-getopt-1.0.12.jar-->
+    <wget id="java-getopt-src"
+          href1="${proto}/www.urbanophile.com/arenn/hacking/getopt/java-getopt-1.0.12.tar.gz"
+          target="${sarch}/java-getopt-1.0.12.tar.gz"
+          unpack1="unpack-tgz-src"
+          unpackdir="java-getopt"
+          sha="2b08ceef5016b91e0333d1e552683784fff86803" />
+
+    <!--xercesImpl.jar, xmlParserAPIs.jar-->
+    <wget id="xerces-src"
+          href1=
+"${proto}/archive.apache.org/dist/xml/xerces-j/old_xerces2/Xerces-J-src.2.4.0.tar.gz"
+          target="${sarch}/Xerces-J-src.2.4.0.tar.gz"
+          unpack1="unpack-tgz-src"
+          sha="53b950eace9bd5d1fe55b76d2b63efb4607c6318" />
+
+  </target>
+
+  <target name="unpack-tgz-src" >
+    <mkdir dir="${unpackdir}" />
+    <untar src="${target}" dest="${csrc}/${unpackdir}" compression="gzip" />
+  </target>
+
+  <target name="unpack-zip-src" >
+    <mkdir dir="${unpackdir}" />
+    <unzip src="${target}" dest="${csrc}/${unpackdir}" />
+  </target>
+
+</project>

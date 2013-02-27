@@ -1,0 +1,29 @@
+#!/bin/sh
+echo 
+echo "INSERTS -------------------------------------------"
+echo
+./run-inserts
+echo 
+echo "DELETES -------------------------------------------"
+echo
+./run-deletes
+echo 
+echo "UPDATES -------------------------------------------"
+echo
+./run-updates
+echo 
+echo "MOVES -------------------------------------------"
+echo
+./run-moves
+echo 
+echo  "COPIES -------------------------------------------"
+echo
+./run-copies
+echo 
+echo "ADCANCED -------------------------------------------"
+echo
+./run-advanced
+echo 
+echo "CONFLICTS -------------------------------------------"
+echo
+./run-conflicts

@@ -1,0 +1,72 @@
+$Id: results,v 1.1 2001-06-18 13:40:23 ctl Exp $
+
+Result: OK, but not exactly as facit
+
+The changes made are:
+1 inserted <em>chairman</em>
+2 inserted <em>secretary</em>
+3 added hyperlink to pritbut Chess FAQ (para text changed as well)
+4 <li> "Use a chess-specific w..." removed
+5 updated "- Chess.Net..." to "Chess.Net"
+(+ CVS $Id\$ changed)
+
+3,4,5 behaved as expected, OK
+1,2 were not inserted inside the font tag. This is quite natural, since the
+matching looked like this
+                           
+       1 li                   1  li              1 li
+        / \                      |                  |
+2 Jussi V   em *              2 Jussi V            font *
+             |                                      |
+            chairman *                          2 Jussi V
+
+Thus, we have two inserts: em and font + Jussi V is moved away => sequencing 
+warning. By luck, they were sequenced in the correct order, not <em>,<font>
+
+What's the problem? Formatting command + edit (ins em) "too close" to another.
+If the font command had been outside the <ul> thing could have worked, also
+if we'd just updated the text nodes. Lessons:
+
+1) Edits that are too close may cause trouble
+2) 3dm warned about this (Seq. warnings in conflict.log), helps human 
+   reviewers! 
+3) In html formatting may interfere with merge
+
+=> When syncing, the common data between the files should not be "chopped"
+up to much (try including unedited subtrees)
+
+The edit script (for ID'ng changes) looks PERFECT!
+
+The conflict log has 1 conflict + 3 warnings. 2 are sequ warnings from the 
+above. The conflict is due to the $ Id $ text changing in both => OK. There
+is a varning about edits being lost for the deletion (4), due to the insertion
+of a formatting command ("<small>" in ccs-complex) in the deleted node.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<conflictlist>
+ <conflicts>
+  <update>
+Node updated in both branches, using branch 1
+   <node tree="merged" path="/0/1/2/0/0" />
+   <node tree="base" path="/0/1/20/0/0" />
+   <node tree="branch1" path="/0/1/20/0/0" />
+   <node tree="branch2" path="/0/1/2/0/0" />
+  </update>
+ </conflicts>
+ <warnings>
+  <insert>
+Insertions/copies in both branches after the context nodes. Sequencing the insertions.
+   <node tree="merged" path="/0/1/0/0/0/1/2/3/0/0/1/0" />
+  </insert>
+  <insert>
+Insertions/copies in both branches after the context nodes. Sequencing the insertions.
+   <node tree="merged" path="/0/1/0/0/0/1/2/3/0/0/1/3" />
+  </insert>
+  <delete>
+Modifications in deleted subtree.
+   <node tree="merged" path="/0/1/0/0/0/1/2/13" />
+   <node tree="base" path="/0/1/16/1" />
+   <node tree="branch2" path="/0/1/0/0/0/1/2/13/1" />
+  </delete>
+ </warnings>
+</conflictlist>

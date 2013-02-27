@@ -1,0 +1,2 @@
+#!/bin/sh
+unzip -p $1.sxw Content.xml > $2.xml

@@ -1,0 +1,9 @@
+# $Id: tdm.test.MergeTest,v 1.1 2006-02-02 17:42:58 ctl Exp $
+# =1=
+# Merge figure updates into modem.html
+#
+base=basefig.svg
+a=fullfig.svg 
+b=modem.html
+facit=final.html
+expect=final.html

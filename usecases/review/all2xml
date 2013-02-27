@@ -1,0 +1,9 @@
+./doc2xml base base
+./doc2xml branch1 branch1
+./doc2xml branch2 branch2
+./doc2xml branch3 branch3
+./doc2xml mergeb12 mergeb12
+./doc2xml mergeb123 mergeb123
+./doc2xml branch3-cf branch3-cf
+
+

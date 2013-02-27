@@ -1,0 +1,8 @@
+#!/bin/sh
+DIR=$1
+3dm -c 0 --merge $DIR/b.xml $DIR/1.xml $DIR/2.xml r.xml
+if 3dm --diff r.xml $DIR/m.xml | grep -q '<diff />'; then
+  echo Ok
+else
+  echo ---FAILED--- Case was $DIR
+fi

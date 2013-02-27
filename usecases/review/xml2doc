@@ -1,0 +1,8 @@
+#!/bin/sh
+cp base.sxw $2.sxw
+cp $1.xml /tmp/Content.xml
+ls -l $2.sxw
+zip -j $2.sxw /tmp/Content.xml
+ls -l $2.sxw
+rm /tmp/Content.xml
+ls -l $2.sxw

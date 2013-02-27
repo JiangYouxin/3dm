@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Lisa adds an apple to the shopping list -->
+<!-- $Id: L3.xml,v 1.2 2001-03-08 10:32:45 ctl Exp $ -->
+<shoppinglist>
+	<item>
+		<name>Emmentaler Cheese</name>
+		<quantity>500g</quantity>
+		<price></price>
+		<shop></shop>
+	</item>
+	<item>
+		<name>Wheat toast</name>
+		<quantity>1 packet</quantity>
+		<price></price>
+		<shop></shop>
+	</item>	
+	<item>
+		<name>Smoked salmon</name>
+		<quantity>250g</quantity>
+		<price></price>
+		<shop></shop>
+	</item>
+	<item>
+		<name>Apples</name>
+		<quantity>3</quantity>
+		<price></price>
+		<shop></shop>
+	</item>
+</shoppinglist>
