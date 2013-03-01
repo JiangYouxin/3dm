@@ -9,11 +9,8 @@ VERID=0.1.5beta1-custom
 install:	
 	ant contrib-get
 	ant -D3dm.version=$(VERID) release
-	mkdir $(TARGETDIR)
+	install -d -m 0755 $(TARGETDIR)
 	cp build/3dm-$(VERID).jar $(TARGETDIR)/3dm.jar
 	cp contrib/jar/{java-getopt-1.0.12.jar,xercesImpl.jar,xmlParserAPIs.jar} \
 	$(TARGETDIR)
-	echo -e '#!/bin/sh\njava -cp' \
-	$(TARGETDIR)/3dm.jar:$(TARGETDIR)/java-getopt-1.0.12.jar:$(TARGETDIR)/xercesImpl.jar:$(TARGETDIR)/xmlParserAPIs.jar  \
-	tdm.tool.TreeDiffMerge '$$@\n' > $(BINDIR)/3dm
-	chmod ugu+x $(BINDIR)/3dm
+	install -m 0755 3dm $(BINDIR) 

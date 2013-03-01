@@ -1,6 +1,2 @@
 #!/bin/sh
-# 3DM startup script
-JAVA=java
-JARPATH=lib
-COMPILEPATH=build
-$JAVA -cp $JARPATH/java-getopt-1.0.8.jar:$JARPATH/sax2.jar:$JARPATH/xerces.jar:$COMPILEPATH TreeDiffMerge $*
+java -jar `cygpath -w /usr/local/3dm/3dm.jar` -cp `cygpath -w /usr/local/3dm/java-getopt-1.0.12.jar`:`cygpath -w /usr/local/3dm/xercesImpl.jar`:`cygpath -w /usr/local/3dm/xmlParserAPIs.jar` tdm.tool.TreeDiffMerge $@
