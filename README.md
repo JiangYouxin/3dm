@@ -6,12 +6,12 @@
 
 * 生成patch文件：
 
-      3dm -d <base> <branch1> [output]
+        3dm -d <base> <branch1> [output]
 
 * 应用patch文件：
 
-      3dm -p <base> <patch> [output]
+        3dm -p <base> <patch> [output]
 
 * 3-way merge:
 
-      3dm -m <base> <branch1> <branch2> [output]
+        3dm -m <base> <branch1> <branch2> [output]
