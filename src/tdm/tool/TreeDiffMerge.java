@@ -38,7 +38,7 @@ public class TreeDiffMerge {
 
   public static void main(String[] args) throws java.io.IOException {
     // Get command line options
-    int firstFileIx = parseOpts( args );
+    int firstFileIx = parseOpts( args ) + 1;
     if( op == MERGE && (args.length - firstFileIx) == 3 )
       merge( firstFileIx, args, System.out );
     else if( op == MERGE && (args.length - firstFileIx) == 4 )
