@@ -1,1 +1,6 @@
 CVS
+build/
+classes/
+contrib/.binstamp
+contrib/jar/
+contrib/src/
