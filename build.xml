@@ -171,6 +171,9 @@ message="The test is successful if there are no errors, and the diff below is &l
          manifest="${build-jar}/MANIFEST.MF" >
       <include name="tdm/**" />
       <exclude name="tdm/test/**" />
+      <zipfileset excludes="META-INF/*.SF" src="contrib/jar/java-getopt-1.0.12.jar"/>
+      <zipfileset excludes="META-INF/*.SF" src="contrib/jar/xmlParserAPIs.jar"/>
+      <zipfileset excludes="META-INF/*.SF" src="contrib/jar/xercesImpl.jar"/>
     </jar>
     <tar destfile="${build-jar}/3dm-${3dm.version}-src.tar.gz"
          basedir="."

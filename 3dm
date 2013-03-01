@@ -1,2 +1,3 @@
 #!/bin/sh
-java -jar `cygpath -w /usr/local/3dm/3dm.jar` -cp `cygpath -w /usr/local/3dm/java-getopt-1.0.12.jar`:`cygpath -w /usr/local/3dm/xercesImpl.jar`:`cygpath -w /usr/local/3dm/xmlParserAPIs.jar` tdm.tool.TreeDiffMerge $@
+
+java -jar `cygpath -w /usr/local/3dm/3dm.jar` tdm.tool.TreeDiffMerge $@

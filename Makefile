@@ -10,7 +10,5 @@ install:
 	ant contrib-get
 	ant -D3dm.version=$(VERID) release
 	install -d -m 0755 $(TARGETDIR)
-	cp build/3dm-$(VERID).jar $(TARGETDIR)/3dm.jar
-	cp contrib/jar/{java-getopt-1.0.12.jar,xercesImpl.jar,xmlParserAPIs.jar} \
-	$(TARGETDIR)
+	install -m 0755 build/3dm-$(VERID).jar $(TARGETDIR)/3dm.jar
 	install -m 0755 3dm $(BINDIR) 
